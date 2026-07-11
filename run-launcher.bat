@@ -3,83 +3,107 @@ setlocal enabledelayedexpansion
 chcp 65001 >nul 2>nul
 
 REM ========================================
-REM Script de lancement du launcher moderne
+REM Script de lancement du launcher
+REM Optimisé pour .NET 8.0 SDK x86
 REM ========================================
 
 set "LAUNCHER_NAME=Mon Launcher Premium"
 set "PROJECT_FILE=MonLauncherJeux.csproj"
-set "PUBLISH_DIR=publish"
 
 REM Détecte le répertoire du script
 cd /d "%~dp0"
 
 cls
 echo.
-echo ╔════════════════════════════════════════════════════════════╗
+echo ╔════════════════════════════════════════════════════════════════════════════════╗
 echo ║          🎮 %LAUNCHER_NAME%                  ║
-echo ╚════════════════════════════════════════════════════════════╝
+echo ╚════════════════════════════════════════════════════════════════════════════════╝
 echo.
 
-REM Vérifie si on lance depuis l'exe publié
-if exist "MonLauncherJeux.exe" (
-    echo ✓ Mode: Exécutable autonome
-    echo ✓ Lancement de l'application...
-    echo.
-    start "" "MonLauncherJeux.exe"
-    exit /b 0
-)
+REM Cherche dotnet dans les emplacements standards
+set "DOTNET_PATH="
 
-REM Vérifie si dotnet est installé
+REM Essai 1: En variable d'environnement
 where dotnet >nul 2>nul
-if errorlevel 1 (
-    echo ❌ ERREUR: .NET n'est pas installé ou introuvable
-    echo.
-    echo 📋 Options:
-    echo.
-    echo 1. Installe le .NET 8 SDK depuis:
-    echo    https://dotnet.microsoft.com/download/dotnet/8.0
-    echo.
-    echo 2. Sélectionne l'installation pour ton système:
-    echo    • Windows x86 ^(32-bit^) pour PC 32 bits
-    echo    • Windows x64 ^(64-bit^) pour PC 64 bits
-    echo.
-    echo 3. Relance ce script après l'installation.
-    echo.
-    echo 🔧 OU: Génère un .exe portable avec publish-windows-x86.bat
-    echo.
-    pause
-    exit /b 1
+if not errorlevel 1 (
+    for /f "tokens=*" %%A in ('where dotnet') do set "DOTNET_PATH=%%A"
+    goto :found_dotnet
 )
 
-REM Affiche la version de dotnet
-for /f "tokens=*" %%A in ('dotnet --version 2^>nul') do set "DOTNET_VERSION=%%A"
-echo ✓ Mode: Développement
-echo ✓ .NET SDK détecté: %DOTNET_VERSION%
+REM Essai 2: Installation x86 par défaut
+if exist "C:\Program Files (x86)\dotnet\dotnet.exe" (
+    set "DOTNET_PATH=C:\Program Files (x86)\dotnet\dotnet.exe"
+    goto :found_dotnet
+)
+
+REM Essai 3: Installation x64 par défaut
+if exist "C:\Program Files\dotnet\dotnet.exe" (
+    set "DOTNET_PATH=C:\Program Files\dotnet\dotnet.exe"
+    goto :found_dotnet
+)
+
+REM Si pas trouvé
+echo ❌ ERREUR: .NET 8.0 SDK n'a pas pu être détecté
+echo.
+echo 📋 Essaye ceci:
+echo.
+echo 1. Installe .NET 8.0 SDK x86 depuis:
+echo    https://dotnet.microsoft.com/download/dotnet/8.0
+echo.
+echo    Choisis bien "Windows x86" car tu utilises le SDK 32-bit
+echo.
+echo 2. Après installation, relance ce script
+echo.
+echo 3. Ou vérifie manuellement:
+echo    Appuie sur Win + R et tape: C:\Program Files (x86)\dotnet\dotnet.exe --version
+echo.
+pause
+exit /b 1
+
+:found_dotnet
+echo ✓ .NET SDK détecté: !DOTNET_PATH!
 echo.
 
-REM Vérifie si le projet existe
+REM Affiche la version
+for /f "tokens=*" %%A in ('"!DOTNET_PATH!" --version 2^>nul') do set "DOTNET_VERSION=%%A"
+echo ✓ Version: %DOTNET_VERSION%
+echo.
+
+REM Vérifie le projet
 if not exist "%PROJECT_FILE%" (
-    echo ❌ ERREUR: Fichier projet '%PROJECT_FILE%' introuvable
+    echo ❌ ERREUR: '%PROJECT_FILE%' non trouvé
     echo.
-    echo Assure-toi que tu es dans le bon répertoire.
+    echo Assure-toi d'être dans le bon répertoire
     echo.
     pause
     exit /b 1
 )
 
-echo ⏳ Compilation et lancement du launcher...
+echo ⏳ Restauration des packages...
+echo.
+"!DOTNET_PATH!" restore "%PROJECT_FILE%" --verbosity quiet
+
+if errorlevel 1 (
+    echo.
+    echo ❌ ERREUR lors de la restauration
+    echo.
+    pause
+    exit /b 1
+)
+
+echo.
+echo ⏳ Compilation et lancement...
 echo.
 
-REM Lance l'application
-dotnet run --project "%PROJECT_FILE%" --configuration Release
+"!DOTNET_PATH!" run --project "%PROJECT_FILE%" --configuration Release --no-restore
 
 if errorlevel 1 (
     echo.
     echo ❌ ERREUR lors du lancement
     echo.
-    echo 💡 Essaie ceci:
-    echo dotnet restore
-    echo dotnet build
+    echo 💡 Essaye ceci:
+    echo "!DOTNET_PATH!" clean
+    echo "!DOTNET_PATH!" build -c Release
     echo.
     pause
     exit /b 1
