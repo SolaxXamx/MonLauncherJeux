@@ -1,67 +1,63 @@
 @echo off
 setlocal enabledelayedexpansion
-chcp 65001 >nul 2>nul
 
-REM ========================================
-REM Script de débogage
-REM Affiche les informations système
-REM ========================================
+REM Script de diagnostic
+REM Affiche les informations systeme
 
 cls
 echo.
-echo ╔════════════════════════════════════════════════════════════════════════════════╗
-echo ║          🔍 Diagnostic du système                           ║
-echo ╚════════════════════════════════════════════════════════════════════════════════╝
+echo Diagnostic du systeme
+echo =====================
 echo.
 
-echo 📋 Vérification des emplacements .NET:
+echo Verification des emplacements .NET:
 echo.
 
-REM Vérifie x86
+REM Verifie x86
 if exist "C:\Program Files (x86)\dotnet\dotnet.exe" (
-    echo ✓ .NET x86 trouvé: C:\Program Files ^(x86^)\dotnet\dotnet.exe
+    echo [OK] .NET x86 trouve: C:\Program Files (x86)\dotnet\dotnet.exe
     echo.
-    for /f "tokens=*" %%A in ('"C:\Program Files (x86)\dotnet\dotnet.exe" --version') do echo   Version: %%A
+    for /f "tokens=*" %%A in ('"C:\Program Files (x86)\dotnet\dotnet.exe" --version') do echo        Version: %%A
     echo.
 ) else (
-    echo ✗ .NET x86 NON trouvé: C:\Program Files ^(x86^)\dotnet
+    echo [NON] .NET x86 NON trouve: C:\Program Files (x86)\dotnet
     echo.
 )
 
-REM Vérifie x64
+REM Verifie x64
 if exist "C:\Program Files\dotnet\dotnet.exe" (
-    echo ✓ .NET x64 trouvé: C:\Program Files\dotnet\dotnet.exe
+    echo [OK] .NET x64 trouve: C:\Program Files\dotnet\dotnet.exe
     echo.
-    for /f "tokens=*" %%A in ('"C:\Program Files\dotnet\dotnet.exe" --version') do echo   Version: %%A
+    for /f "tokens=*" %%A in ('"C:\Program Files\dotnet\dotnet.exe" --version') do echo        Version: %%A
     echo.
 ) else (
-    echo ✗ .NET x64 NON trouvé: C:\Program Files\dotnet
+    echo [NON] .NET x64 NON trouve: C:\Program Files\dotnet
     echo.
 )
 
-REM Vérifie via PATH
-echo 📍 Vérification via PATH:
+REM Verifie via PATH
+echo Verification via PATH:
 where dotnet >nul 2>nul
 if not errorlevel 1 (
     for /f "tokens=*" %%A in ('where dotnet') do (
-        echo ✓ Trouvé via PATH: %%A
+        echo [OK] Trouve via PATH: %%A
         "%%A" --version
     )
     echo.
 ) else (
-    echo ✗ dotnet non trouvé dans PATH
+    echo [NON] dotnet non trouve dans PATH
     echo.
 )
 
-echo 📂 Fichiers du projet:
+echo Fichiers du projet:
 if exist "MonLauncherJeux.csproj" (
-    echo ✓ MonLauncherJeux.csproj trouvé
+    echo [OK] MonLauncherJeux.csproj trouve
 ) else (
-    echo ✗ MonLauncherJeux.csproj NON trouvé
+    echo [NON] MonLauncherJeux.csproj NON trouve
 )
 
 echo.
-echo 🔧 Si tu vois des ❌, il faut installer .NET 8.0 SDK:
+echo Si tu vois des [NON], il faut installer .NET 8.0 SDK:
 echo    https://dotnet.microsoft.com/download/dotnet/8.0
 echo.
 pause

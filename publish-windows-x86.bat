@@ -1,11 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
-chcp 65001 >nul 2>nul
 
-REM ========================================
-REM Script de génération d'un EXE portable
-REM Optimisé pour .NET 8.0 SDK x86
-REM ========================================
+REM Script de generation d'un EXE portable
+REM Optimise pour .NET 8.0 SDK x86
 
 set "PROJECT_FILE=MonLauncherJeux.csproj"
 set "PUBLISH_DIR=publish"
@@ -15,9 +12,8 @@ cd /d "%~dp0"
 
 cls
 echo.
-echo ╔════════════════════════════════════════════════════════════════════════════════╗
-echo ║     📦 Génération de l'EXE Windows x86 ^(32-bit^)         ║
-echo ╚════════════════════════════════════════════════════════════════════════════════╝
+echo Generation de l'EXE Windows x86
+echo ==================================
 echo.
 
 REM Cherche dotnet
@@ -39,7 +35,7 @@ if exist "C:\Program Files\dotnet\dotnet.exe" (
     goto :found_dotnet
 )
 
-echo ❌ ERREUR: .NET 8.0 SDK n'a pas pu être détecté
+echo ERREUR: .NET 8.0 SDK n'a pas ete detecte
 echo.
 echo Installe .NET 8.0 SDK x86 depuis:
 echo https://dotnet.microsoft.com/download/dotnet/8.0
@@ -48,48 +44,37 @@ pause
 exit /b 1
 
 :found_dotnet
-echo ✓ .NET SDK détecté: !DOTNET_PATH!
+echo [OK] .NET SDK detecte: !DOTNET_PATH!
 echo.
 
-echo ⏳ Préparation de la publication...
-echo.
-
-REM Supprime l'ancien dossier publish
+echo [...] Suppression de l'ancien dossier publish...
 if exist "%PUBLISH_DIR%" (
-    echo 🗑️  Suppression de l'ancien dossier publish...
     rmdir /s /q "%PUBLISH_DIR%" >nul 2>nul
 )
 
-echo.
-echo 🔨 Compilation et publication en mode Release...
-echo    Cela peut prendre 1-2 minutes la première fois...
+echo [...] Compilation et publication en mode Release...
+echo     Cela peut prendre 1-2 minutes la premiere fois...
 echo.
 
 "!DOTNET_PATH!" publish "%PROJECT_FILE%" -c Release -r %RUNTIME% --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false
 
 if errorlevel 1 (
     echo.
-    echo ❌ ERREUR lors de la publication
-    echo.
-    echo 💡 Essaye:
-    echo "!DOTNET_PATH!" clean
-    echo "!DOTNET_PATH!" restore
+    echo ERREUR lors de la publication
     echo.
     pause
     exit /b 1
 )
 
 echo.
-echo ✅ Publication réussie!
+echo [OK] Publication reussie!
 echo.
-echo 📂 EXE généré: %PUBLISH_DIR%\MonLauncherJeux.exe
-echo 💾 Taille approximative: ~50-100 MB
+echo EXE genere: %PUBLISH_DIR%\MonLauncherJeux.exe
+echo Taille approximative: 50-100 MB
 echo.
-echo 🚀 Tu peux maintenant:
-echo    1. Double-cliquer sur l'EXE pour lancer le launcher
-echo    2. Copier le dossier 'publish' sur un PC sans .NET
-echo.
-echo 📝 Note: Cet EXE est autonome et ne nécessite pas .NET d'être installé
+echo Tu peux maintenant:
+echo 1. Double-cliquer sur l'EXE pour lancer le launcher
+echo 2. Copier le dossier 'publish' sur un PC sans .NET
 echo.
 pause
 exit /b 0

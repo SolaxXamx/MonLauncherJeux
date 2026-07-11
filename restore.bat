@@ -1,11 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
-chcp 65001 >nul 2>nul
 
-REM ========================================
-REM Script de restauration des dépendances
-REM Optimisé pour .NET 8.0 SDK x86
-REM ========================================
+REM Script de restauration des dependances
 
 set "PROJECT_FILE=MonLauncherJeux.csproj"
 
@@ -13,9 +9,8 @@ cd /d "%~dp0"
 
 cls
 echo.
-echo ╔════════════════════════════════════════════════════════════════════════════════╗
-echo ║   📥 Restauration des dépendances NuGet                    ║
-echo ╚════════════════════════════════════════════════════════════════════════════════╝
+echo Restauration des dependances NuGet
+echo ====================================
 echo.
 
 REM Cherche dotnet
@@ -37,7 +32,7 @@ if exist "C:\Program Files\dotnet\dotnet.exe" (
     goto :found_dotnet
 )
 
-echo ❌ ERREUR: .NET 8.0 SDK n'a pas pu être détecté
+echo ERREUR: .NET 8.0 SDK n'a pas ete detecte
 echo.
 echo Installe .NET 8.0 SDK x86 depuis:
 echo https://dotnet.microsoft.com/download/dotnet/8.0
@@ -46,26 +41,26 @@ pause
 exit /b 1
 
 :found_dotnet
-echo ✓ .NET SDK détecté: !DOTNET_PATH!
+echo [OK] .NET SDK detecte: !DOTNET_PATH!
 echo.
 
-echo ⏳ Restauration des packages NuGet...
+echo [...] Restauration des packages NuGet...
 echo.
 
 "!DOTNET_PATH!" restore "%PROJECT_FILE%"
 
 if errorlevel 1 (
     echo.
-    echo ❌ ERREUR lors de la restauration
+    echo ERREUR lors de la restauration
     echo.
     pause
     exit /b 1
 )
 
 echo.
-echo ✅ Restauration réussie!
+echo [OK] Restauration reussie!
 echo.
-echo 💡 Maintenant tu peux lancer: run-launcher.bat
+echo Maintenant tu peux lancer: run-launcher.bat
 echo.
 pause
 exit /b 0
