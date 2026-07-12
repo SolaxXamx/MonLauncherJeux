@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using MonLauncherJeux.Core.Constants;
@@ -6,7 +7,7 @@ using MonLauncherJeux.Core.Models;
 namespace MonLauncherJeux.Core.Services;
 
 /// <summary>
-/// Service de gestion des données JSON (jeux, profil, paramètres)
+/// Service de gestion des donnees JSON (jeux, profil, parametres)
 /// </summary>
 public sealed class DataService
 {
@@ -92,7 +93,7 @@ public sealed class DataService
     }
 
     /// <summary>
-    /// Charge les paramètres de l'application
+    /// Charge les parametres de l'application
     /// </summary>
     public AppSettings LoadSettings()
     {
@@ -106,13 +107,13 @@ public sealed class DataService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Erreur lors du chargement des paramètres : {ex.Message}");
+            Debug.WriteLine($"Erreur lors du chargement des parametres : {ex.Message}");
             return new AppSettings();
         }
     }
 
     /// <summary>
-    /// Sauvegarde les paramètres de l'application
+    /// Sauvegarde les parametres de l'application
     /// </summary>
     public void SaveSettings(AppSettings settings)
     {
@@ -124,7 +125,7 @@ public sealed class DataService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Erreur lors de la sauvegarde des paramètres : {ex.Message}");
+            Debug.WriteLine($"Erreur lors de la sauvegarde des parametres : {ex.Message}");
         }
     }
 }

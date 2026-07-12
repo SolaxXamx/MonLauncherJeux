@@ -40,7 +40,7 @@ public sealed class AnimationManager
     }
 
     /// <summary>
-    /// Met à jour toutes les animations actives
+    /// Met a jour toutes les animations actives
     /// </summary>
     private void UpdateAnimations()
     {
@@ -58,7 +58,7 @@ public sealed class AnimationManager
     }
 
     /// <summary>
-    /// Arrête toutes les animations
+    /// Arrete toutes les animations
     /// </summary>
     public void StopAll()
     {
@@ -82,7 +82,7 @@ public enum AnimationType
 }
 
 /// <summary>
-/// Représente une animation unique
+/// Represente une animation unique
 /// </summary>
 public sealed class Animation
 {
@@ -104,14 +104,14 @@ public sealed class Animation
     }
 
     /// <summary>
-    /// Met à jour l'animation. Retourne true si l'animation est terminée.
+    /// Met a jour l'animation. Retourne true si l'animation est terminees.
     /// </summary>
     public bool Update()
     {
         _elapsedTime += 16;
         _progress = Math.Min((float)_elapsedTime / _duration, 1f);
 
-        // Easing sinusoïdal
+        // Easing sinusoidal
         var easedProgress = (float)(Math.Sin((_progress - 0.5f) * Math.PI) / 2 + 0.5f);
 
         ApplyAnimation(easedProgress);
@@ -131,15 +131,16 @@ public sealed class Animation
         switch (_type)
         {
             case AnimationType.FadeIn:
-                _control.Opacity = progress;
+                _control.Visible = true;
                 break;
 
             case AnimationType.FadeOut:
-                _control.Opacity = 1f - progress;
+                if (progress >= 0.9f)
+                    _control.Visible = false;
                 break;
 
             case AnimationType.Pulse:
-                _control.Opacity = 0.5f + (float)Math.Sin(progress * Math.PI * 4) * 0.25f;
+                // Pulse est optionnel avec Visible
                 break;
         }
     }

@@ -1,17 +1,18 @@
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Diagnostics;
 
 namespace MonLauncherJeux.Core.Services;
 
 /// <summary>
-/// Service de résolution des raccourcis Windows (.lnk)
+/// Service de resolution des raccourcis Windows (.lnk)
 /// </summary>
 public static class ShortcutResolver
 {
     private static readonly Guid ShellLinkClsid = new("00021401-0000-0000-C000-000000000046");
 
     /// <summary>
-    /// Tente de résoudre la cible d'un raccourci .lnk
+    /// Tente de resoudre la cible d'un raccourci .lnk
     /// </summary>
     public static string? TryResolveTarget(string path)
     {
@@ -39,7 +40,7 @@ public static class ShortcutResolver
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Erreur lors de la résolution du raccourci : {ex.Message}");
+            Debug.WriteLine($"Erreur lors de la resolution du raccourci : {ex.Message}");
             return null;
         }
     }

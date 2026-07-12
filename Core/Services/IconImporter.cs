@@ -1,15 +1,16 @@
 using System.Drawing.Imaging;
+using System.Diagnostics;
 using MonLauncherJeux.Core.Constants;
 
 namespace MonLauncherJeux.Core.Services;
 
 /// <summary>
-/// Service d'extraction et de sauvegarde des icônes de jeux
+/// Service d'extraction et de sauvegarde des icones de jeux
 /// </summary>
 public static class IconImporter
 {
     /// <summary>
-    /// Importe l'icône d'un fichier exécutable ou raccourci
+    /// Importe l'icone d'un fichier executable ou raccourci
     /// </summary>
     public static string ImportIcon(string sourcePath, string gameName)
     {
@@ -20,15 +21,15 @@ public static class IconImporter
             // Nettoie le nom du fichier
             var cleanName = string.Join("_", gameName.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries));
             
-            // Génère un nom unique basé sur le hash du chemin source
+            // Genere un nom unique base sur le hash du chemin source
             var hash = Math.Abs(sourcePath.ToLowerInvariant().GetHashCode());
             var output = Path.Combine(Paths.IconFolder, $"{cleanName}_{hash}.png");
 
-            // Si l'icône existe déjà, la retourne
+            // Si l'icone existe deja, la retourne
             if (File.Exists(output))
                 return output;
 
-            // Extrait l'icône associée au fichier
+            // Extrait l'icone associee au fichier
             using var icon = Icon.ExtractAssociatedIcon(sourcePath);
             if (icon is null)
                 return string.Empty;
@@ -41,7 +42,7 @@ public static class IconImporter
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Erreur lors de l'importation de l'icône : {ex.Message}");
+            Debug.WriteLine($"Erreur lors de l'importation de l'icone : {ex.Message}");
             return string.Empty;
         }
     }

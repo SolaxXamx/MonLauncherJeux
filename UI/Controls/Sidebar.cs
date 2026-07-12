@@ -3,9 +3,9 @@ using MonLauncherJeux.UI.Themes;
 namespace MonLauncherJeux.UI.Controls;
 
 /// <summary>
-/// Barre latérale de navigation moderne
+/// Barre laterale de navigation moderne
 /// </summary>
-public sealed class Sidebar : Control
+public sealed class Sidebar : Panel
 {
     private readonly List<SidebarItem> _items = new();
     private int _selectedIndex = -1;
@@ -16,18 +16,17 @@ public sealed class Sidebar : Control
 
     public Sidebar()
     {
-        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
         BackColor = Color.FromArgb(20, 27, 36);
         ForeColor = Color.White;
         Width = 80;
         Dock = DockStyle.Left;
         AutoScroll = true;
 
-        AddItem("🏠", "Accueil");
-        AddItem("🎮", "Bibliothèque");
-        AddItem("⭐", "Favoris");
-        AddItem("📊", "Statistiques");
-        AddItem("⚙️", "Paramètres");
+        AddItem("H", "Accueil");
+        AddItem("G", "Bibliotheque");
+        AddItem("*", "Favoris");
+        AddItem("S", "Statistiques");
+        AddItem("C", "Parametres");
     }
 
     public void SetTheme(ThemePalette theme)
@@ -87,7 +86,7 @@ public sealed class Sidebar : Control
             g.FillRectangle(selectedBrush, itemRect);
         }
 
-        var font = new Font("Segoe UI Emoji", 16);
+        var font = new Font("Segoe UI", 12, FontStyle.Bold);
         var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
         using var textBrush = new SolidBrush(isSelected ? Color.White : Color.FromArgb(160, 167, 180));
         g.DrawString(item.Icon, font, textBrush, itemRect, format);
